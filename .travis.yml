@@ -1,32 +1,24 @@
 sudo: false
 language: go
-go: '1.11.x'
-
+go: 1.11.x
 env:
   global:
   - GO111MODULE=on
   - DOCKER_USERNAME=docwhat
-  - secure: u3w2f25Y69gVrBlY5wgosDQZGdBppIoI/G9B3Nj8NAA6P76rPmMjOuvOjx6YK0V42OLS1lyahydDdSzl8zz/tq5O2KoQDXnrbMVtzS41MqpURlQpFnIpwd9GVC2D5UdgplmeibD05DAFoTBf/YxpUVYwE+vYrusng+pS2kTYAylzFk9m6v+eG9BcY4UYlBtnHvuUIrN6bxXdfKW6MKgQAg/rcgUzhgk1cDeW0OnaZFY5kYj6NlrJm/bYjxujsiJgM/B2qpMOzpA8LEZblOykTCBrSNnu9cF7Dy2iBasRUtC68Rz9VsVnVQ0tu9WR2CwOb8B3RyLxv5Tedl1ITWZSpSF6yEvAglZqOL41lW/Hn/CDHEFwn9KUbCyYo4YIT/rHMsgeQVaQOwcYLMZjybLZD84c1re9CsMcgWlx0h1rIPmDXcVilEnHeYeA7mIONnQJH39dq+Mh2iOgM8KDbIJSgo2hRK/gIR6HXln1rRgIIenfeqL6hj64+P6jQPQ1m1NrqD21Bjnm7UAygQvbbylu2EJp2FazNQjrm8f4LjY4xjeGIcEa3kDdPvxt3ZKJrsTR2nCIis2m2M5grApl7naW7puC0kAoWoWwDNbGmFvkyp45mOsqFNl71JMWEvWkPuEOWNzawy/rJEMGsHkFbfkReg7itbMbX6DBRe2YgsK8YYM=
-  - secure: BzeXcdhJ7D9BBvR6Jha9OTctaPMIJv5PrBZbov2g7P4bOWh6agdjtyitHtN82ac11MwD9MVpAXAPkpEKe/CzRrEilzoZ47c+l4uXk7wNyFUZSJRePxkOt59cnqsiwxtL6FBAfibE3GjDpt8A2WbUs1GVWE9itZJMD+uBA1DGn72f3c8VOMbiI5Mk77vN+Uq/3BaPT8U0N3jd27SUcyxppsP5bTTttAAFJc9an1gAQ6FAh42VlSmLSd8SjtPDIuGNFJ6e/Zl3RwL84QFJ56tylwQ/HlcHAVIGXke0HFryGa36Ml2T/0nXvA8IO8LQZc0EQOxH7/yy22UfixeC4rYgvl3kW68HJCsA02L+0YIi+PrF+v7nYpJK3HMjaCeiXK780QY+3PPFFaaMwIynTrZFplTM5F55oyFK6wixl3ibB+NJWiuGlPRQbh6pW/wUQ1KFOLMlSAXchib7WRFH/KR7qM5dr8tDHZZaB49ILDd1njFmZbCC3ut9ugrwS4vKSvLyuiTznrPtqS+TPJPRUC1hN94zKdNOQ/LGC7zvO3r4aNkfkH7WhLy2YmyceXg7r1SElnH+D6Fa7HEL4UTrWVuM68OX0eyR3wqYmjzc5Yexxijdb0yBUNDdo7eAlD0PL2yjU6siclTvTihOqSHsIH0IvqLVE9knciX6c1ZDAleVx9k=
-
+  - secure: QnEwlhHixpuYL/nSpH8KLevNhigosJAUDDkUUJtnsotpffS4a0yqcuj6M/ryH+H3JQtNDa5RA8SSe6ymlcsf5VWwSpk0OVUnF4N8FUxfI0vMemD+GOE+7sv/t+A/9KDUJon3jRLcK/D2UGhFkVNgBXuJbkAdL/bP2S9S/oe/n5MF2Bx4SBR8hwt69wEbzNGd4FGedkaZDWrcj7czSj5pc3/b29s6MqYmCnvFgIzaFS6k5Bm7kEKaHUfR2Rdvk0Yn3+O+sqhFUkeNTd8aR2cZNw5hJhXuaX6R81V99RkNyoYhKBWqa4BivgbBtAnH3bz8VCwzVCGRH+PY3wpxhU0HTn23Rl4yxB9257muf0NgykfxMD1YaCaLlu1RBxDnn9IqnwJ1Q6iZUywH+/y+5hAxiQxNUQCVEdOfmsZjbxBMrij7hdcyKRECXx5myvFOIw1O4w4xEtZ9S2k8RpWelnUscNxgLV/44ulHXfCQ72qMwj8TPMi+TwZL95Q3WxMcP0dFYLj+FR9e8WdLJHCXNmwCCLcMO8hVBptBeb5h6y1OZ5gctAAACNa4imy/i5sYSdhdQ1zVLhyu1b+6knYUDHyX+aJ11PvT51FmZQTvXDiA/2cAdy1s5YVSY+sgzRoqbi0G+HGT2eWjTUGxR5Ks7bVr9W3aBjg6stL+Q5h86pfKWOs=
 notifications:
   email:
     on_success: never
     on_failure: always
-
 install:
 - "./script/bootstrap"
-
 script:
 - "./script/test"
 - "./script/lint"
-
 before_deploy:
 - "./script/docker-login"
-
 after_deploy:
-- "curl -sSf -X POST 'https://hooks.microbadger.com/images/docwhat/go-importd/nH_22PPe-nH2mYs66L0BRGDQsr4='"
-
+- curl -sSf -X POST 'https://hooks.microbadger.com/images/docwhat/go-importd/nH_22PPe-nH2mYs66L0BRGDQsr4='
 deploy:
   skip_cleanup: true
   provider: script
