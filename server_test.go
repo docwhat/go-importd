@@ -3,7 +3,7 @@ package main
 import "testing"
 
 func TestURLExists(t *testing.T) {
-	var urlTestTable = []struct {
+	urlTestTable := []struct {
 		in  string
 		out bool
 	}{

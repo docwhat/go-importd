@@ -33,7 +33,7 @@ func urlExists(url string) bool {
 }
 
 func makeRedirector(config appConfig) http.HandlerFunc {
-	var redirectHTML = `<!DOCTYPE html>
+	redirectHTML := `<!DOCTYPE html>
 <html lang="en">
 <meta charset="utf-8">
 <meta name="go-import" content="{{.ImportPrefix}} git {{.VcsURL}}">

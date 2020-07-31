@@ -10,6 +10,6 @@ source script/utilities.bash
 
 header "Go lang CI lint"
 rm -rf bin
-curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- v1.20.1
+curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- v1.29.0
 
 # vim: set ft=sh :
