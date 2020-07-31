@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	goTemplate "html/template"
 	"log"
 	"net/http"
@@ -15,15 +16,20 @@ func serve(config appConfig) {
 
 func urlExists(url string) bool {
 	/* #nosec */
-	if resp, err := http.Head(url); err != nil {
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodHead, url, nil)
+	if err != nil {
 		log.Println(err)
-	} else {
-		defer resp.Body.Close()
-		if resp.StatusCode == 200 {
-			return true
-		}
+		return false
 	}
-	return false
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+
+	defer resp.Body.Close()
+	return resp.StatusCode == http.StatusOK
 }
 
 func makeRedirector(config appConfig) http.HandlerFunc {
