@@ -1,36 +1,40 @@
 # This is an example goreleaser.yaml file with some sane defaults.
 # Make sure to check the documentation at http://goreleaser.com
 builds:
-- binary: go-importd
-  env:
-  - CGO_ENABLED=0
-  goos:
-    - darwin
-    - linux
-    - freebsd
-  goarch:
-    - amd64
-    - arm
-  goarm:
-    - 7
-archive:
-  format: binary
-  files:
-    - LICENSE*
-    - README*
+  - binary: go-importd
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+      - freebsd
+    goarch:
+      - amd64
+      - arm
+    goarm:
+      - 7
+
+archives:
+  - format: "binary"
+    files:
+      - "LICENSE*"
+      - "README*"
+
 checksum:
-  name_template: 'checksums.txt'
+  name_template: "checksums.txt"
+
 snapshot:
   name_template: "{{ .Tag }}-next"
+
 changelog:
   sort: asc
   filters:
     exclude:
-    - '(?i)^docs?:'
-    - '(?i)^(tests?|lint):'
-    - '(?i)^readme:'
-    - '(?i)^(editorconfig|scripts?|travis|ci):'
-    - 'typo|thinko'
+      - "(?i)^docs?:"
+      - "(?i)^(tests?|lint):"
+      - "(?i)^readme:"
+      - "(?i)^(editorconfig|scripts?|travis|ci):"
+      - "typo|thinko"
 release:
   github:
     owner: docwhat
@@ -41,17 +45,15 @@ dockers:
       - go-importd
     image_templates:
       - "docwhat/go-importd:{{ .Tag }}"
+      - "docwhat/go-importd:{{ .Major }}"
+      - "docwhat/go-importd:{{ .Major }}.{{ .Minor }}"
       - "docwhat/go-importd:v{{ .Major }}"
       - "docwhat/go-importd:v{{ .Major }}.{{ .Minor }}"
-      - docwhat/go-importd:latest
+      - "docwhat/go-importd:latest"
     build_flag_templates:
-      - "--label=org.label-schema.schema-version=1.0"
-      - "--label=org.label-schema.name=go-importd"
-      - "--label=org.label-schema.description=A 'go get' redirector for vanity names."
-      - "--label=org.label-schema.url=https://github.com/docwhat/go-importd"
-      - "--label=org.label-schema.version={{.Version}}"
-      - "--label=org.label-schema.vcs-ref={{.Commit}}"
-      - "--label=org.label-schema.vcs-url=https://github.com/docwhat/go-importd.git"
-      - "--label=org.label-schema.name={{.ProjectName}}"
-      - "--label=org.label-schema.docker.cmd=docker run -d -p 80:80 docwhat/go-importd"
-      - "--label=org.label-schema.docker.cmd.help=docker run docwhat/go-importd --help"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.url=https://github.com/docwhat/go-importd"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.source=https://github.com/docwhat/go-importd.git"
