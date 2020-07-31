@@ -40,3 +40,4 @@
 go-importd
 lint.xml
 cover.out
+/dist/
