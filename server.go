@@ -7,10 +7,16 @@ import (
 	"log"
 	"net/http"
 	"strings"
+
+	"github.com/MEDIGO/go-healthz"
 )
 
 func serve(config appConfig) {
 	http.HandleFunc("/", makeRedirector(config))
+
+	healthz.Set("version", versionString())
+	http.Handle("/healthz", healthz.Handler())
+
 	log.Fatal(http.ListenAndServe(config.listenAddress, nil))
 }
 
