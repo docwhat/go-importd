@@ -15,9 +15,8 @@ name: Lint Code Base
 # Start the job on all push #
 #############################
 on:
-  push:
-    branches-ignore:
-      - 'master'
+  push: {}
+  pull-request: {}
 
 ###############
 # Set the Job #
@@ -45,6 +44,8 @@ jobs:
       - name: Lint Code Base
         uses: docker://github/super-linter:v3
         env:
-          DISABLE_ERRORS: "true"
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: master
+          GIHTUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 # EOF
