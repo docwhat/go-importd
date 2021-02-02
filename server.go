@@ -25,16 +25,19 @@ func urlExists(url string) bool {
 	req, err := http.NewRequestWithContext(context.Background(), http.MethodHead, url, nil)
 	if err != nil {
 		log.Println(err)
+
 		return false
 	}
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println(err)
+
 		return false
 	}
 
 	defer resp.Body.Close()
+
 	return resp.StatusCode == http.StatusOK
 }
 
@@ -71,6 +74,7 @@ func makeRedirector(config appConfig) http.HandlerFunc {
 
 		if repoName == "" {
 			http.Error(resp, "Not Found", 404)
+
 			return
 		}
 
@@ -78,6 +82,7 @@ func makeRedirector(config appConfig) http.HandlerFunc {
 
 		if !urlExists(data.VcsURL) {
 			http.Error(resp, "Not Found", 404)
+
 			return
 		}
 
@@ -85,6 +90,7 @@ func makeRedirector(config appConfig) http.HandlerFunc {
 		err := template.Execute(&buf, data)
 		if err != nil {
 			http.Error(resp, err.Error(), 500)
+
 			return
 		}
 
