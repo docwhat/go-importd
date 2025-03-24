@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/MEDIGO/go-healthz"
 )
@@ -17,7 +18,26 @@ func serve(config appConfig) {
 	healthz.Set("version", versionString())
 	http.Handle("/healthz", healthz.Handler())
 
-	log.Fatal(http.ListenAndServe(config.listenAddress, nil))
+	const longWait, shortWait = 10 * time.Second, 3 * time.Second
+
+	server := &http.Server{
+		Addr:                         config.listenAddress,
+		Handler:                      http.DefaultServeMux,
+		DisableGeneralOptionsHandler: false,
+		TLSConfig:                    nil,
+		TLSNextProto:                 nil,
+		ConnState:                    nil,
+		BaseContext:                  nil,
+		ConnContext:                  nil,
+		MaxHeaderBytes:               http.DefaultMaxHeaderBytes,
+		ReadTimeout:                  longWait,
+		WriteTimeout:                 longWait,
+		ReadHeaderTimeout:            shortWait,
+		ErrorLog:                     log.New(log.Writer(), "http.Server: ", log.LstdFlags),
+		IdleTimeout:                  0,
+	}
+
+	log.Fatal(server.ListenAndServe())
 }
 
 func urlExists(url string) bool {
