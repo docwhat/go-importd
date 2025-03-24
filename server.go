@@ -3,26 +3,51 @@ package main
 import (
 	"bytes"
 	"context"
+	"fmt"
 	goTemplate "html/template"
 	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/MEDIGO/go-healthz"
 )
 
-func serve(config appConfig) {
+func serve(config appConfig) error {
 	http.HandleFunc("/", makeRedirector(config))
 
 	healthz.Set("version", versionString())
 	http.Handle("/healthz", healthz.Handler())
 
-	log.Fatal(http.ListenAndServe(config.listenAddress, nil))
+	const longWait, shortWait = 10 * time.Second, 3 * time.Second
+
+	server := &http.Server{
+		Addr:                         config.listenAddress,
+		Handler:                      http.DefaultServeMux,
+		DisableGeneralOptionsHandler: false,
+		TLSConfig:                    nil,
+		TLSNextProto:                 nil,
+		ConnState:                    nil,
+		BaseContext:                  nil,
+		ConnContext:                  nil,
+		MaxHeaderBytes:               http.DefaultMaxHeaderBytes,
+		ReadTimeout:                  longWait,
+		WriteTimeout:                 longWait,
+		ReadHeaderTimeout:            shortWait,
+		ErrorLog:                     log.New(log.Writer(), "http.Server: ", log.LstdFlags),
+		IdleTimeout:                  0,
+	}
+
+	if err := server.ListenAndServe(); err != nil {
+		return fmt.Errorf("unable to start server: %w", err)
+	}
+
+	return nil
 }
 
-func urlExists(url string) bool {
+func urlExists(ctx context.Context, url string) bool {
 	/* #nosec */
-	req, err := http.NewRequestWithContext(context.Background(), http.MethodHead, url, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodHead, url, http.NoBody)
 	if err != nil {
 		log.Println(err)
 
@@ -36,7 +61,9 @@ func urlExists(url string) bool {
 		return false
 	}
 
-	defer resp.Body.Close()
+	if err := resp.Body.Close(); err != nil {
+		log.Println(err)
+	}
 
 	return resp.StatusCode == http.StatusOK
 }
@@ -70,18 +97,19 @@ func makeRedirector(config appConfig) http.HandlerFunc {
 	}
 
 	return func(resp http.ResponseWriter, req *http.Request) {
-		repoName := strings.SplitN(strings.Trim(req.URL.Path, "/"), "/", 2)[0]
+		const expectedNumParts = 2
+		repoName := strings.SplitN(strings.Trim(req.URL.Path, "/"), "/", expectedNumParts)[0]
 
 		if repoName == "" {
-			http.Error(resp, "Not Found", 404)
+			http.Error(resp, "Not Found", http.StatusNotFound)
 
 			return
 		}
 
 		data := &templateData{ImportPrefix: (config.importDomain + repoName), VcsURL: (config.githubUserURL + repoName)}
 
-		if !urlExists(data.VcsURL) {
-			http.Error(resp, "Not Found", 404)
+		if !urlExists(req.Context(), data.VcsURL) {
+			http.Error(resp, "Not Found", http.StatusNotFound)
 
 			return
 		}
@@ -89,13 +117,13 @@ func makeRedirector(config appConfig) http.HandlerFunc {
 		var buf bytes.Buffer
 		err := template.Execute(&buf, data)
 		if err != nil {
-			http.Error(resp, err.Error(), 500)
+			http.Error(resp, err.Error(), http.StatusInternalServerError)
 
 			return
 		}
 
 		if _, err := resp.Write(buf.Bytes()); err != nil {
-			http.Error(resp, err.Error(), 500)
+			http.Error(resp, err.Error(), http.StatusInternalServerError)
 		}
 	}
 }

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"strings"
 
@@ -9,12 +9,12 @@ import (
 )
 
 type appConfig struct {
-	listenAddress string
-	githubUserURL string
-	importDomain  string
+	listenAddress string `exhaustruct:"optional"`
+	githubUserURL string `exhaustruct:"optional"`
+	importDomain  string `exhaustruct:"optional"`
 }
 
-func parseFlags(args []string) appConfig {
+func parseFlags(args []string) (appConfig, error) {
 	config := appConfig{}
 
 	app := kingpin.New("go-importd", "Redirector for go imports for custom domains.")
@@ -26,7 +26,7 @@ func parseFlags(args []string) appConfig {
 
 	hostname, err := os.Hostname()
 	if err != nil {
-		log.Fatalf("Unable to get hostname: %s", err)
+		return appConfig{}, fmt.Errorf("unable to get hostname: %w", err)
 	}
 
 	app.Flag("listen", "The address to serve HTTP on. (Env: GO_IMPORTD_LISTEN)").
@@ -56,5 +56,5 @@ func parseFlags(args []string) appConfig {
 	config.githubUserURL = strings.TrimSuffix(config.githubUserURL, "/") + "/"
 	config.importDomain = strings.TrimSuffix(config.importDomain, "/") + "/"
 
-	return config
+	return config, nil
 }

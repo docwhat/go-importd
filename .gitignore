@@ -39,5 +39,7 @@
 /bin/
 go-importd
 lint.xml
+junit.xml
 cover.out
+/reports/
 /dist/

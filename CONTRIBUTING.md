@@ -1,10 +1,8 @@
-Contributing
-============
+# Contributing
 
 I love pull requests from everyone!
 
-Getting Started
----------------
+## Getting Started
 
 ### Install Go
 
@@ -38,5 +36,5 @@ At this point you're waiting on me. I try to be responsive to pull requests, but
 
 Some things that will increase the chance that your pull request is accepted:
 
--   Write tests.
--   Write a [good commit message](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
+- Write tests.
+- Write a [good commit message](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).

@@ -14,9 +14,10 @@ linters:
     - godox
     - lll
     - wsl
+    - depguard
 
 linters-settings:
   misspell:
     locale: US
     ignore-words:
-      - "importd"
+      - importd
