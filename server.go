@@ -40,9 +40,9 @@ func serve(config appConfig) {
 	log.Fatal(server.ListenAndServe())
 }
 
-func urlExists(url string) bool {
+func urlExists(ctx context.Context, url string) bool {
 	/* #nosec */
-	req, err := http.NewRequestWithContext(context.Background(), http.MethodHead, url, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodHead, url, nil)
 	if err != nil {
 		log.Println(err)
 
@@ -100,7 +100,7 @@ func makeRedirector(config appConfig) http.HandlerFunc {
 
 		data := &templateData{ImportPrefix: (config.importDomain + repoName), VcsURL: (config.githubUserURL + repoName)}
 
-		if !urlExists(data.VcsURL) {
+		if !urlExists(req.Context(), data.VcsURL) {
 			http.Error(resp, "Not Found", 404)
 
 			return

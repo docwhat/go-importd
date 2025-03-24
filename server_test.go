@@ -1,6 +1,7 @@
 package main
 
 import "testing"
+import "context"
 
 func TestURLExists(t *testing.T) {
 	urlTestTable := []struct {
@@ -12,7 +13,7 @@ func TestURLExists(t *testing.T) {
 	}
 
 	for _, tt := range urlTestTable {
-		exists := urlExists(tt.in)
+		exists := urlExists(context.Background(), tt.in)
 		if exists != tt.out {
 			t.Errorf("urlExists(%v) => %v, want %v", tt.in, exists, tt.out)
 		}
