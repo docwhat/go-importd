@@ -9,7 +9,13 @@ func main() {
 	log.SetFlags(0)
 	log.SetPrefix("go-importd: ")
 
-	config := parseFlags(os.Args[1:])
+	config, err := parseFlags(os.Args[1:])
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	serve(config)
+	err = serve(config)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

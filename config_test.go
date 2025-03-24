@@ -25,7 +25,10 @@ var flagTestTable = []struct {
 
 func TestParseFlags(t *testing.T) {
 	for _, tt := range flagTestTable {
-		config := parseFlags(tt.in)
+		config, err := parseFlags(tt.in)
+		if err != nil {
+			t.Errorf("args %q parseFlags() returned error %v, wanted none", tt.in, err)
+		}
 		configValue := reflect.ValueOf(config)
 		fieldValue := reflect.Indirect(configValue).FieldByName(tt.field).String()
 		if !strings.EqualFold(fieldValue, tt.out) {

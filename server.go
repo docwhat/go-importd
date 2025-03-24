@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"fmt"
 	goTemplate "html/template"
 	"log"
 	"net/http"
@@ -12,7 +13,7 @@ import (
 	"github.com/MEDIGO/go-healthz"
 )
 
-func serve(config appConfig) {
+func serve(config appConfig) error {
 	http.HandleFunc("/", makeRedirector(config))
 
 	healthz.Set("version", versionString())
@@ -37,7 +38,11 @@ func serve(config appConfig) {
 		IdleTimeout:                  0,
 	}
 
-	log.Fatal(server.ListenAndServe())
+	if err := server.ListenAndServe(); err != nil {
+		return fmt.Errorf("unable to start server: %w", err)
+	}
+
+	return nil
 }
 
 func urlExists(ctx context.Context, url string) bool {
