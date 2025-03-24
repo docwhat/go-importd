@@ -42,7 +42,7 @@ func serve(config appConfig) {
 
 func urlExists(ctx context.Context, url string) bool {
 	/* #nosec */
-	req, err := http.NewRequestWithContext(ctx, http.MethodHead, url, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodHead, url, http.NoBody)
 	if err != nil {
 		log.Println(err)
 
