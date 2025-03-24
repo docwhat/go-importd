@@ -9,9 +9,9 @@ import (
 )
 
 type appConfig struct {
-	listenAddress string
-	githubUserURL string
-	importDomain  string
+	listenAddress string `exhaustruct:"optional"`
+	githubUserURL string `exhaustruct:"optional"`
+	importDomain  string `exhaustruct:"optional"`
 }
 
 func parseFlags(args []string) appConfig {
