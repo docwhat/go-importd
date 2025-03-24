@@ -90,10 +90,11 @@ func makeRedirector(config appConfig) http.HandlerFunc {
 	}
 
 	return func(resp http.ResponseWriter, req *http.Request) {
-		repoName := strings.SplitN(strings.Trim(req.URL.Path, "/"), "/", 2)[0]
+		const expectedNumParts = 2
+		repoName := strings.SplitN(strings.Trim(req.URL.Path, "/"), "/", expectedNumParts)[0]
 
 		if repoName == "" {
-			http.Error(resp, "Not Found", 404)
+			http.Error(resp, "Not Found", http.StatusNotFound)
 
 			return
 		}
@@ -101,7 +102,7 @@ func makeRedirector(config appConfig) http.HandlerFunc {
 		data := &templateData{ImportPrefix: (config.importDomain + repoName), VcsURL: (config.githubUserURL + repoName)}
 
 		if !urlExists(req.Context(), data.VcsURL) {
-			http.Error(resp, "Not Found", 404)
+			http.Error(resp, "Not Found", http.StatusNotFound)
 
 			return
 		}
@@ -109,13 +110,13 @@ func makeRedirector(config appConfig) http.HandlerFunc {
 		var buf bytes.Buffer
 		err := template.Execute(&buf, data)
 		if err != nil {
-			http.Error(resp, err.Error(), 500)
+			http.Error(resp, err.Error(), http.StatusInternalServerError)
 
 			return
 		}
 
 		if _, err := resp.Write(buf.Bytes()); err != nil {
-			http.Error(resp, err.Error(), 500)
+			http.Error(resp, err.Error(), http.StatusInternalServerError)
 		}
 	}
 }
