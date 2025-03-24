@@ -20,4 +20,4 @@ linters-settings:
   misspell:
     locale: US
     ignore-words:
-      - "importd"
+      - importd
