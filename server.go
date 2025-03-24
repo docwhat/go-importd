@@ -61,7 +61,9 @@ func urlExists(ctx context.Context, url string) bool {
 		return false
 	}
 
-	defer resp.Body.Close()
+	if err := resp.Body.Close(); err != nil {
+		log.Println(err)
+	}
 
 	return resp.StatusCode == http.StatusOK
 }
