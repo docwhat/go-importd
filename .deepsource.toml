@@ -4,5 +4,5 @@ version = 1
 name = "go"
 enabled = true
 
-  [analyzers.meta]
-  import_paths = ["docwhat.org/go-importd"]
+[analyzers.meta]
+import_paths = ["docwhat.org/go-importd"]
