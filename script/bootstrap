@@ -4,12 +4,16 @@
 
 set -euo pipefail
 
-cd "$(dirname "${BASH_SOURCE[0]}")" && cd ..
+root="$(cd "${BASH_SOURCE%/*}/.." && pwd)"
 
-source script/utilities.bash
+indent() {
+	sed 's/^/    /'
+}
 
-header "Go lang CI lint"
-rm -rf bin
-curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- v1.29.0
+for cmd in trunk gotestsum; do
+	printf "Verifying %s works...\n" "${cmd}"
+	printf "$ script/%s --version\n" "${cmd}" | indent
+	"${root}/script/${cmd}" --version | indent
+done
 
-# vim: set ft=sh :
+# EOF
