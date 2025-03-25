@@ -12,16 +12,16 @@ builds:
       - amd64
       - arm
     goarm:
-      - 7
+      - "7"
 
 archives:
-  - format: "binary"
+  - format: binary
     files:
-      - "LICENSE*"
-      - "README*"
+      - LICENSE*
+      - README*
 
 checksum:
-  name_template: "checksums.txt"
+  name_template: checksums.txt
 
 snapshot:
   name_template: "{{ .Tag }}-next"
@@ -34,7 +34,7 @@ changelog:
       - "(?i)^(tests?|lint):"
       - "(?i)^readme:"
       - "(?i)^(editorconfig|scripts?|travis|ci):"
-      - "typo|thinko"
+      - typo|thinko
 release:
   github:
     owner: docwhat
@@ -49,11 +49,11 @@ dockers:
       - "docwhat/go-importd:{{ .Major }}.{{ .Minor }}"
       - "docwhat/go-importd:v{{ .Major }}"
       - "docwhat/go-importd:v{{ .Major }}.{{ .Minor }}"
-      - "docwhat/go-importd:latest"
+      - docwhat/go-importd:latest
     build_flag_templates:
       - "--label=org.opencontainers.image.created={{.Date}}"
       - "--label=org.opencontainers.image.title={{.ProjectName}}"
-      - "--label=org.opencontainers.image.url=https://github.com/docwhat/go-importd"
+      - --label=org.opencontainers.image.url=https://github.com/docwhat/go-importd
       - "--label=org.opencontainers.image.version={{.Version}}"
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-      - "--label=org.opencontainers.image.source=https://github.com/docwhat/go-importd.git"
+      - --label=org.opencontainers.image.source=https://github.com/docwhat/go-importd.git
