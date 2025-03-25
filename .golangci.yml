@@ -15,6 +15,7 @@ linters:
     - lll
     - wsl
     - depguard
+    - tenv
 
 linters-settings:
   misspell:
